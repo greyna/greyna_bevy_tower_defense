@@ -1,54 +1,32 @@
+mod schedule;
+mod turret;
+mod utils;
+
 use std::time::Duration;
 
 use bevy::app::AppExit;
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 
+use schedule::GameplaySet;
+use turret::*;
+
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
+        .add_plugin(TurretPlugin)
         .add_startup_systems((spawn_player, spawn_camera, spawn_target))
         .add_system(exit_game)
         .add_system(target_cursor.in_set(GameplaySet::Input))
         .add_system(move_player.in_set(GameplaySet::LogicMovement))
-        .add_system(build_turret_to_system(1.0).in_set(GameplaySet::LogicAction))
         .add_system(check_collisions.in_set(GameplaySet::LogicCollisions))
         .add_system(handle_collisions.in_set(GameplaySet::LogicPostCollisions))
-        .add_system(
-            turret_spawn_audio
-                .run_if(any_added_component_condition::<Turret>())
-                .in_set(GameplaySet::Depiction),
-        )
-        .add_system(
-            turret_spawn_sprite
-                .run_if(any_added_component_condition::<Turret>())
-                .in_set(GameplaySet::Depiction),
-        )
         .add_systems(
             (first_blink.before(blink), handle_blink_requests, blink)
                 .in_set(GameplaySet::Depiction),
         )
-        .configure_set(GameplaySet::Input.before(GameplaySet::Logic))
-        .configure_set(GameplaySet::LogicMovement.in_set(GameplaySet::Logic))
-        .configure_set(GameplaySet::LogicAction.in_set(GameplaySet::Logic))
-        .configure_set(GameplaySet::LogicCollisions.in_set(GameplaySet::Logic))
-        .configure_set(GameplaySet::LogicMovement.before(GameplaySet::LogicAction))
-        .configure_set(GameplaySet::LogicAction.before(GameplaySet::LogicCollisions))
-        .configure_set(GameplaySet::LogicCollisions.before(GameplaySet::LogicPostCollisions))
-        .configure_set(GameplaySet::Logic.before(GameplaySet::Depiction))
         .add_event::<Collision>()
         .run();
-}
-
-#[derive(SystemSet, Debug, Hash, PartialEq, Eq, Clone)]
-enum GameplaySet {
-    Input,
-    Logic,
-    LogicMovement,
-    LogicAction,
-    LogicCollisions,
-    LogicPostCollisions,
-    Depiction,
 }
 
 #[derive(Component)]
@@ -126,89 +104,6 @@ pub fn move_player(
         player_transform.translation.x = target.x;
         player_transform.translation.y = target.y;
     }
-}
-
-#[derive(Component)]
-pub struct Turret {}
-
-pub struct Cooldown {
-    timer: Timer,
-}
-
-impl Cooldown {
-    fn new(duration: f32) -> Self {
-        let mut timer = Timer::from_seconds(duration, TimerMode::Once);
-        timer.tick(Duration::from_secs_f32(duration + 1.0));
-        Self { timer }
-    }
-
-    fn tick(&mut self, time: &Time) {
-        self.timer.tick(time.delta());
-    }
-
-    fn ready(&self) -> bool {
-        self.timer.finished()
-    }
-
-    fn start(&mut self) {
-        self.timer.reset();
-    }
-}
-
-pub fn build_turret_to_system(
-    cooldown: f32,
-) -> impl FnMut(Commands, Res<Target>, Res<Input<MouseButton>>, Res<Time>) {
-    let mut cooldown = Cooldown::new(cooldown);
-    move |commands, target, input, time| {
-        build_turret(commands, &target, &input, &time, &mut cooldown)
-    }
-}
-
-pub fn build_turret(
-    mut commands: Commands,
-    target: &Target,
-    input: &Input<MouseButton>,
-    time: &Time,
-    cooldown: &mut Cooldown,
-) {
-    cooldown.tick(time);
-
-    if cooldown.ready() {
-        if let Some(target) = target.pos {
-            if input.just_pressed(MouseButton::Left) {
-                commands.spawn((
-                    Transform::from_xyz(target.x + 70.0, target.y, 0.0),
-                    Turret {},
-                    Collidable {},
-                ));
-                cooldown.start();
-            }
-        }
-    }
-}
-
-pub fn turret_spawn_sprite(
-    mut commands: Commands,
-    asset_server: Res<AssetServer>,
-    new_turrets: Query<(Entity, &Transform), Added<Turret>>,
-) {
-    for (turret_entity, turret_transform) in &new_turrets {
-        commands.entity(turret_entity).insert(SpriteBundle {
-            transform: *turret_transform,
-            texture: asset_server.load("sprites/turret.png"),
-            ..default()
-        });
-    }
-}
-
-pub fn turret_spawn_audio(audio: Res<Audio>, asset_server: Res<AssetServer>) {
-    let sfx = asset_server.load("audio/turret_creation.ogg");
-    audio.play(sfx);
-}
-
-pub fn any_added_component_condition<T: Component>(
-) -> impl FnMut(Query<(), Added<T>>) -> bool + Clone {
-    move |query: Query<(), Added<T>>| !query.is_empty()
 }
 
 pub fn exit_game(input: Res<Input<KeyCode>>, mut app_exit_sender: EventWriter<AppExit>) {
