@@ -1,5 +1,5 @@
+use super::collisions::components::Collidable;
 use super::components::*;
-use crate::collisions::components::Collidable;
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 

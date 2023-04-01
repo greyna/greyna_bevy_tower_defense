@@ -1,5 +1,5 @@
 use super::events::*;
-use crate::blinking::components::BlinkRequest;
+use crate::game::blinking::components::BlinkRequest;
 use bevy::prelude::*;
 
 pub fn handle_collisions(mut commands: Commands, mut collisions_receiver: EventReader<Collision>) {

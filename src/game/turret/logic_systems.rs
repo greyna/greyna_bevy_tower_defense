@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{collisions::components::Collidable, game::components::Target, utils::*};
+use crate::{game::collisions::components::Collidable, game::components::Target, game::utils::*};
 
 use super::components::Turret;
 
