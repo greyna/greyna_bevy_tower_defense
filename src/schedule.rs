@@ -10,7 +10,6 @@ impl Plugin for SchedulePlugin {
             .configure_set(GameplaySet::LogicCollisions.in_set(GameplaySet::Logic))
             .configure_set(GameplaySet::LogicMovement.before(GameplaySet::LogicAction))
             .configure_set(GameplaySet::LogicAction.before(GameplaySet::LogicCollisions))
-            .configure_set(GameplaySet::LogicCollisions.before(GameplaySet::LogicPostCollisions))
             .configure_set(GameplaySet::Logic.before(GameplaySet::Depiction));
     }
 }
@@ -22,6 +21,5 @@ pub enum GameplaySet {
     LogicMovement,
     LogicAction,
     LogicCollisions,
-    LogicPostCollisions,
     Depiction,
 }
