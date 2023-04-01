@@ -2,16 +2,16 @@ use bevy::prelude::*;
 
 use crate::GameplaySet;
 
-use core_systems::build_turret_to_system;
+use logic_systems::build_turret_to_system;
 
 use crate::utils::*;
 use components::*;
 use depiction_systems::*;
 
 mod components;
-mod core_systems;
 mod depiction_systems;
 mod events;
+mod logic_systems;
 mod resources;
 mod startup_systems;
 
