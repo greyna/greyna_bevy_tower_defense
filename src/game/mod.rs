@@ -15,10 +15,7 @@ use collisions::CollisionsPlugin;
 use turret::TurretPlugin;
 
 pub mod components;
-mod depiction_systems;
-mod events;
 mod logic_systems;
-mod resources;
 pub mod schedule;
 mod startup_systems;
 

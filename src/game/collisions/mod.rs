@@ -9,8 +9,6 @@ pub mod components;
 mod depiction_systems;
 mod events;
 mod logic_systems;
-mod resources;
-mod startup_systems;
 
 pub struct CollisionsPlugin;
 
