@@ -1,30 +1,28 @@
+mod blinking;
 mod schedule;
 mod turret;
 mod utils;
-
-use std::time::Duration;
 
 use bevy::app::AppExit;
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 
+use blinking::components::BlinkRequest;
+use blinking::BlinkingPlugin;
 use schedule::GameplaySet;
-use turret::*;
+use turret::TurretPlugin;
 
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_plugin(TurretPlugin)
+        .add_plugin(BlinkingPlugin)
         .add_startup_systems((spawn_player, spawn_camera, spawn_target))
         .add_system(exit_game)
         .add_system(target_cursor.in_set(GameplaySet::Input))
         .add_system(move_player.in_set(GameplaySet::LogicMovement))
         .add_system(check_collisions.in_set(GameplaySet::LogicCollisions))
         .add_system(handle_collisions.in_set(GameplaySet::LogicPostCollisions))
-        .add_systems(
-            (first_blink.before(blink), handle_blink_requests, blink)
-                .in_set(GameplaySet::Depiction),
-        )
         .add_event::<Collision>()
         .run();
 }
@@ -139,103 +137,5 @@ pub fn handle_collisions(mut commands: Commands, mut collisions_receiver: EventR
     for collision in collisions_receiver.iter() {
         commands.entity(collision.entity_a).insert(BlinkRequest {});
         commands.entity(collision.entity_b).insert(BlinkRequest {});
-    }
-}
-
-#[derive(Component)]
-#[component(storage = "SparseSet")]
-pub struct BlinkRequest {}
-
-pub fn handle_blink_requests(
-    mut commands: Commands,
-    mut requests: Query<(Entity, Option<&mut Blinking>), With<BlinkRequest>>,
-) {
-    for (entity, blinking) in requests.iter_mut() {
-        match blinking {
-            Some(mut b) => b.reset_expiration(),
-            None => drop(commands.entity(entity).insert(Blinking::default())),
-        };
-        commands.entity(entity).remove::<BlinkRequest>();
-    }
-}
-
-#[derive(Component)]
-#[component(storage = "SparseSet")]
-pub struct Blinking {
-    blink_timer: Timer,
-    expiration_timer: Timer,
-    first_visibility: Visibility,
-}
-
-impl Default for Blinking {
-    fn default() -> Self {
-        Self {
-            blink_timer: Timer::from_seconds(0.12, TimerMode::Repeating),
-            expiration_timer: Timer::from_seconds(0.6, TimerMode::Once),
-            first_visibility: Default::default(),
-        }
-    }
-}
-
-impl Blinking {
-    pub fn init_first_visibility(&mut self, visibility: Visibility) {
-        self.first_visibility = visibility;
-    }
-
-    pub fn tick(&mut self, delta: Duration) {
-        self.blink_timer.tick(delta);
-        self.expiration_timer.tick(delta);
-    }
-
-    pub fn toggling_visibility(&self) -> bool {
-        self.blink_timer.finished()
-    }
-
-    pub fn expired(&self) -> bool {
-        self.expiration_timer.finished()
-    }
-
-    pub fn reset_expiration(&mut self) {
-        self.expiration_timer.reset();
-    }
-
-    pub fn opposite_first_visibility(&self) -> Visibility {
-        match self.first_visibility {
-            Visibility::Inherited => Visibility::Hidden,
-            Visibility::Hidden => Visibility::Inherited,
-            Visibility::Visible => Visibility::Hidden,
-        }
-    }
-
-    pub fn first_visibility(&self) -> Visibility {
-        self.first_visibility
-    }
-}
-
-pub fn first_blink(mut blinkers: Query<(&mut Visibility, &mut Blinking), Added<Blinking>>) {
-    for (mut vis, mut blink) in blinkers.iter_mut() {
-        blink.init_first_visibility(*vis);
-        *vis = blink.opposite_first_visibility();
-    }
-}
-
-pub fn blink(
-    mut commands: Commands,
-    time: Res<Time>,
-    mut blinkers: Query<(Entity, &mut Visibility, &mut Blinking)>,
-) {
-    for (entity, mut vis, mut blink) in blinkers.iter_mut() {
-        blink.tick(time.delta());
-
-        if blink.expired() {
-            *vis = blink.first_visibility();
-            commands.entity(entity).remove::<Blinking>();
-        } else if blink.toggling_visibility() {
-            *vis = if *vis == blink.first_visibility() {
-                blink.opposite_first_visibility()
-            } else {
-                blink.first_visibility()
-            };
-        }
     }
 }
