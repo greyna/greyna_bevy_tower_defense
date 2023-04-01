@@ -1,4 +1,5 @@
 mod blinking;
+mod collisions;
 mod schedule;
 mod turret;
 mod utils;
@@ -7,8 +8,9 @@ use bevy::app::AppExit;
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 
-use blinking::components::BlinkRequest;
 use blinking::BlinkingPlugin;
+use collisions::components::Collidable;
+use collisions::CollisionsPlugin;
 use schedule::GameplaySet;
 use turret::TurretPlugin;
 
@@ -17,13 +19,11 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_plugin(TurretPlugin)
         .add_plugin(BlinkingPlugin)
+        .add_plugin(CollisionsPlugin)
         .add_startup_systems((spawn_player, spawn_camera, spawn_target))
         .add_system(exit_game)
         .add_system(target_cursor.in_set(GameplaySet::Input))
         .add_system(move_player.in_set(GameplaySet::LogicMovement))
-        .add_system(check_collisions.in_set(GameplaySet::LogicCollisions))
-        .add_system(handle_collisions.in_set(GameplaySet::LogicPostCollisions))
-        .add_event::<Collision>()
         .run();
 }
 
@@ -107,35 +107,5 @@ pub fn move_player(
 pub fn exit_game(input: Res<Input<KeyCode>>, mut app_exit_sender: EventWriter<AppExit>) {
     if input.just_pressed(KeyCode::Escape) {
         app_exit_sender.send(AppExit);
-    }
-}
-
-#[derive(Component)]
-pub struct Collidable {}
-
-pub struct Collision {
-    entity_a: Entity,
-    entity_b: Entity,
-}
-
-pub fn check_collisions(
-    collidables: Query<(Entity, &Transform), With<Collidable>>,
-    mut collision_sender: EventWriter<Collision>,
-) {
-    let mut collidables_couples = collidables.iter_combinations();
-    while let Some([a, b]) = collidables_couples.fetch_next() {
-        if a.1.translation.distance(b.1.translation) < 64.0 {
-            collision_sender.send(Collision {
-                entity_a: a.0,
-                entity_b: b.0,
-            });
-        }
-    }
-}
-
-pub fn handle_collisions(mut commands: Commands, mut collisions_receiver: EventReader<Collision>) {
-    for collision in collisions_receiver.iter() {
-        commands.entity(collision.entity_a).insert(BlinkRequest {});
-        commands.entity(collision.entity_b).insert(BlinkRequest {});
     }
 }
