@@ -1,22 +1,25 @@
-use bevy::prelude::*;
-
-use crate::game::schedule::GameSet;
-
-use logic_systems::build_turret_to_system;
-
-use crate::game::utils::*;
-use components::*;
-use depiction_systems::*;
-
+mod cleanup_systems;
 mod components;
 mod depiction_systems;
 mod logic_systems;
+
+use bevy::prelude::*;
+
+use crate::game::schedule::GameSet;
+use crate::game::utils::*;
+use crate::AppState;
+
+use cleanup_systems::*;
+use components::*;
+use depiction_systems::*;
+use logic_systems::*;
 
 pub struct TurretPlugin;
 
 impl Plugin for TurretPlugin {
     fn build(&self, app: &mut App) {
         app.add_system(build_turret_to_system(1.0).in_set(GameSet::LogicAction))
+            .add_system(despawn_turrets.in_schedule(OnExit(AppState::Game)))
             .add_system(
                 turret_spawn_audio
                     .run_if(any_added_component_condition::<Turret>())

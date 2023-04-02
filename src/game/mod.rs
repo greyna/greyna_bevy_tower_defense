@@ -1,24 +1,25 @@
-use bevy::prelude::*;
-
-use schedule::GameSet;
-
-use logic_systems::*;
-use schedule::SchedulePlugin;
-use startup_systems::*;
-
 pub mod blinking;
+mod cleanup_systems;
 pub mod collisions;
+pub mod components;
+mod logic_systems;
+pub mod schedule;
+mod startup_systems;
 mod turret;
 pub mod utils;
+
+use schedule::*;
+
+use crate::AppState;
+use bevy::prelude::*;
 
 use blinking::BlinkingPlugin;
 use collisions::CollisionsPlugin;
 use turret::TurretPlugin;
 
-pub mod components;
-mod logic_systems;
-pub mod schedule;
-mod startup_systems;
+use cleanup_systems::*;
+use logic_systems::*;
+use startup_systems::*;
 
 pub struct GamePlugin;
 
@@ -28,7 +29,13 @@ impl Plugin for GamePlugin {
             .add_plugin(TurretPlugin)
             .add_plugin(BlinkingPlugin)
             .add_plugin(CollisionsPlugin)
-            .add_startup_systems((spawn_player, spawn_camera, spawn_target))
+            .add_systems(
+                (spawn_player, spawn_camera, spawn_target).in_schedule(OnEnter(AppState::Game)),
+            )
+            .add_systems(
+                (despawn_player, despawn_camera, despawn_target)
+                    .in_schedule(OnExit(AppState::Game)),
+            )
             .add_system(target_cursor.in_set(GameSet::Input))
             .add_system(move_player.in_set(GameSet::LogicMovement));
     }
