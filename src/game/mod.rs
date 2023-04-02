@@ -2,8 +2,9 @@ use bevy::prelude::*;
 
 use schedule::GameSet;
 
-use self::logic_systems::*;
-use self::startup_systems::*;
+use logic_systems::*;
+use schedule::SchedulePlugin;
+use startup_systems::*;
 
 pub mod blinking;
 pub mod collisions;
@@ -23,7 +24,8 @@ pub struct GamePlugin;
 
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugin(TurretPlugin)
+        app.add_plugin(SchedulePlugin)
+            .add_plugin(TurretPlugin)
             .add_plugin(BlinkingPlugin)
             .add_plugin(CollisionsPlugin)
             .add_startup_systems((spawn_player, spawn_camera, spawn_target))

@@ -15,7 +15,11 @@ pub struct CollisionsPlugin;
 impl Plugin for CollisionsPlugin {
     fn build(&self, app: &mut App) {
         app.add_system(check_collisions.in_set(GameSet::LogicCollisions))
-            .add_system(handle_collisions.after(check_collisions))
+            .add_system(
+                handle_collisions
+                    .in_set(GameSet::LogicCollisions)
+                    .after(check_collisions),
+            )
             .add_event::<Collision>();
     }
 }
