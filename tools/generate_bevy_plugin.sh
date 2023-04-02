@@ -23,9 +23,6 @@ for file_name in ${file_names[@]}; do
         if [ "$file_name" == "mod.rs" ]; then
             echo -e "use bevy::prelude::*;\n" > $file_name
 
-            echo -e "use crate::utils::*;" >> $file_name
-            echo -e "use crate::GameplaySet;\n" >> $file_name
-
             echo -e "mod components;" >> $file_name
             echo -e "mod logic_systems;" >> $file_name
             echo -e "mod depiction_systems;" >> $file_name
