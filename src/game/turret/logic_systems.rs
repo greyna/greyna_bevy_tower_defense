@@ -28,7 +28,7 @@ fn build_turret(
     if cooldown.ready() {
         if let Some(target) = target.pos {
             if input.just_pressed(MouseButton::Left) {
-                let target = grid.snap(&target);
+                let target = grid.snap(target);
                 commands.spawn((
                     Transform::from_xyz(target.x, target.y, 0.0),
                     Turret {},

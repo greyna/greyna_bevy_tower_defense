@@ -1,5 +1,8 @@
 use bevy::prelude::*;
 
+#[derive(Component, Clone)]
+pub struct Terrain;
+
 #[derive(Resource, Clone, Copy)]
 pub struct Grid {
     cell_size: f32,
@@ -14,7 +17,7 @@ impl Grid {
         self.cell_size
     }
 
-    pub fn snap(&self, pos: &Vec2) -> Vec2 {
+    pub fn snap(&self, pos: Vec2) -> Vec2 {
         Vec2::new(self.snap_coordinate(pos.x), self.snap_coordinate(pos.y))
     }
 
