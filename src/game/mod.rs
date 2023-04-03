@@ -2,6 +2,7 @@ pub mod blinking;
 mod cleanup_systems;
 pub mod collisions;
 pub mod components;
+pub mod grid;
 mod logic_systems;
 pub mod schedule;
 mod startup_systems;
@@ -15,6 +16,7 @@ use bevy::prelude::*;
 
 use blinking::BlinkingPlugin;
 use collisions::CollisionsPlugin;
+use grid::GridPlugin;
 use turret::TurretPlugin;
 
 use cleanup_systems::*;
@@ -26,6 +28,7 @@ pub struct GamePlugin;
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app.add_plugin(SchedulePlugin)
+            .add_plugin(GridPlugin)
             .add_plugin(TurretPlugin)
             .add_plugin(BlinkingPlugin)
             .add_plugin(CollisionsPlugin)

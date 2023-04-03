@@ -6,7 +6,7 @@ use bevy::prelude::*;
 use game::GamePlugin;
 
 fn main() {
-    println!("Menu State");
+    println!("Game State");
 
     App::new()
         .add_plugins(DefaultPlugins)
@@ -24,8 +24,8 @@ pub fn exit_game(input: Res<Input<KeyCode>>, mut app_exit_sender: EventWriter<Ap
 
 #[derive(States, Debug, Clone, Copy, Eq, PartialEq, Hash, Default)]
 pub enum AppState {
-    #[default]
     Menu,
+    #[default]
     Game,
 }
 

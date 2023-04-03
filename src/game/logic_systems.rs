@@ -1,4 +1,5 @@
 use super::components::*;
+use super::grid::components::Grid;
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 
@@ -20,6 +21,7 @@ pub fn move_player(
     window_q: Query<&Window, With<PrimaryWindow>>,
     mut player_q: Query<&mut Transform, With<Player>>,
     target: Res<Target>,
+    grid: Res<Grid>,
 ) {
     let window = window_q.single();
 
@@ -27,6 +29,8 @@ pub fn move_player(
         Some(pos) => pos,
         None => Vec2::new(window.width() / 2.0, window.height() / 2.0),
     };
+
+    let target = grid.snap(&target);
 
     for mut player_transform in &mut player_q {
         player_transform.translation.x = target.x;
