@@ -4,7 +4,7 @@ Tower Defense game using Rust programming language and Bevy game engine made by 
 # TODO
 - [ ] Menu & UI
 - [x] Terrain
-- [ ] Enemies
+- [x] Enemies
 - [ ] Turret shooting & enemy death
 - [ ] Lives & Game over
 - [ ] Dollars: resource, turret price & enemy giving on death 

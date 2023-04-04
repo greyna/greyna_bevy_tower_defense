@@ -2,6 +2,7 @@ pub mod blinking;
 mod cleanup_systems;
 pub mod collisions;
 pub mod components;
+mod enemies;
 pub mod grid;
 mod logic_systems;
 pub mod schedule;
@@ -16,6 +17,7 @@ use bevy::prelude::*;
 
 use blinking::BlinkingPlugin;
 use collisions::CollisionsPlugin;
+use enemies::EnemiesPlugin;
 use grid::GridPlugin;
 use turret::TurretPlugin;
 
@@ -32,6 +34,7 @@ impl Plugin for GamePlugin {
             .add_plugin(TurretPlugin)
             .add_plugin(BlinkingPlugin)
             .add_plugin(CollisionsPlugin)
+            .add_plugin(EnemiesPlugin)
             .add_systems(
                 (spawn_player, spawn_camera, spawn_target).in_schedule(OnEnter(AppState::Game)),
             )
