@@ -5,7 +5,8 @@ Tower Defense game using Rust programming language and Bevy game engine made by 
 - [ ] Menu & UI
 - [x] Terrain
 - [x] Enemies
-- [ ] Turret shooting & enemy death
+- [x] Shooting
+- [ ] Damages & death
 - [ ] Lives & Game over
 - [ ] Dollars: resource, turret price & enemy giving on death 
 - [ ] Slot/turret levels & upgrade
@@ -13,3 +14,5 @@ Tower Defense game using Rust programming language and Bevy game engine made by 
 - [ ] Authorize turret builds only on first line
 - [ ] Turret side effect: divide slot level and turret damage type levels
 - [ ] Projectiles
+- [ ] Art integration
+- [ ] Wasm deployment

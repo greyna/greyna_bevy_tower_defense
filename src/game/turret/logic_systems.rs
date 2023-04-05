@@ -1,7 +1,8 @@
 use bevy::prelude::*;
 
 use crate::game::{
-    collisions::components::Collidable, components::Target, grid::components::*, utils::*,
+    collisions::components::*, components::*, grid::components::*, shooting::components::*,
+    utils::*,
 };
 
 use super::components::*;
@@ -33,6 +34,7 @@ fn build_turret(
                     Transform::from_xyz(target.x, target.y, 0.0),
                     Turret {},
                     Collidable {},
+                    Shooter::new(1.0),
                 ));
                 cooldown.start();
             }

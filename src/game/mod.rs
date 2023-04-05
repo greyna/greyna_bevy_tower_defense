@@ -6,6 +6,7 @@ mod enemies;
 pub mod grid;
 mod logic_systems;
 pub mod schedule;
+mod shooting;
 mod startup_systems;
 mod turret;
 pub mod utils;
@@ -19,6 +20,7 @@ use blinking::BlinkingPlugin;
 use collisions::CollisionsPlugin;
 use enemies::EnemiesPlugin;
 use grid::GridPlugin;
+use shooting::ShootingPlugin;
 use turret::TurretPlugin;
 
 use cleanup_systems::*;
@@ -35,6 +37,7 @@ impl Plugin for GamePlugin {
             .add_plugin(BlinkingPlugin)
             .add_plugin(CollisionsPlugin)
             .add_plugin(EnemiesPlugin)
+            .add_plugin(ShootingPlugin)
             .add_systems(
                 (spawn_player, spawn_camera, spawn_target).in_schedule(OnEnter(AppState::Game)),
             )

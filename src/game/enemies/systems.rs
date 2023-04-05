@@ -1,5 +1,5 @@
 use super::components::Enemy;
-use crate::game::{grid::components::Grid, utils::Cooldown};
+use crate::game::{grid::components::Grid, shooting::components::Shootable, utils::Cooldown};
 use bevy::prelude::*;
 use rand::Rng;
 
@@ -40,6 +40,7 @@ fn spawn_enemies(
                 texture: asset_server.load(random_sprite),
                 ..default()
             },
+            Shootable::default(),
         ));
         cooldown.start();
     }
