@@ -1,6 +1,9 @@
-use super::components::Enemy;
-use crate::game::{
-    damages::Health, grid::components::Grid, shooting::components::Shootable, utils::Cooldown,
+use super::{components::Enemy, resources::Lives};
+use crate::{
+    game::{
+        damages::Health, grid::components::Grid, shooting::components::Shootable, utils::Cooldown,
+    },
+    AppState,
 };
 use bevy::prelude::*;
 use rand::Rng;
@@ -54,5 +57,28 @@ pub fn move_enemies(time: Res<Time>, mut enemies: Query<&mut Transform, With<Ene
         let pos = &mut enemy_pos.translation;
         const ENEMIES_SPEED: f32 = 200.0;
         pos.x += ENEMIES_SPEED * time.delta_seconds();
+    }
+}
+
+pub fn enemies_out(
+    mut commands: Commands,
+    enemies: Query<(Entity, &Transform), With<Enemy>>,
+    mut lives: ResMut<Lives>,
+    grid: Res<Grid>,
+    mut next_state: ResMut<NextState<AppState>>,
+) {
+    for (enemy_entity, enemy_transform) in enemies.iter() {
+        if enemy_transform.translation.x >= grid.width() {
+            commands.entity(enemy_entity).despawn();
+
+            lives.0 -= 1;
+            println!("Enemy out, life lost! Lives = {}", lives.0);
+
+            if lives.0 <= 0 {
+                println!("Game Over !");
+                next_state.set(AppState::Menu);
+                break;
+            }
+        }
     }
 }

@@ -6,16 +6,16 @@ pub struct Terrain;
 #[derive(Resource, Clone, Copy)]
 pub struct Grid {
     height: f32,
-    _width: f32,
+    width: f32,
     cell_size: f32,
 }
 
 impl Grid {
-    pub fn new(cell_size: f32, height: f32, _width: f32) -> Self {
+    pub fn new(cell_size: f32, height: f32, width: f32) -> Self {
         Self {
             cell_size,
             height,
-            _width,
+            width,
         }
     }
 
@@ -42,8 +42,8 @@ impl Grid {
         }
     }
 
-    pub fn _width(&self) -> f32 {
-        self._width
+    pub fn width(&self) -> f32 {
+        self.width
     }
 
     pub fn height(&self) -> f32 {

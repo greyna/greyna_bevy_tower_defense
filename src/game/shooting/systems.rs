@@ -1,5 +1,5 @@
 use super::components::*;
-use crate::game::blinking::components::BlinkRequest;
+use crate::game::{blinking::components::BlinkRequest, grid::components::Grid};
 use bevy::prelude::*;
 use std::f32::consts::FRAC_PI_2;
 
@@ -8,6 +8,7 @@ pub fn shoot(
     mut shooters: Query<(&mut Transform, &mut Shooter), Without<Shootable>>,
     mut targets: Query<(Entity, &Transform, &mut Shootable), Without<Shooter>>,
     time: Res<Time>,
+    grid: Res<Grid>,
 ) {
     for (_, _, mut target) in targets.iter_mut() {
         target.shot = 0;
@@ -20,6 +21,9 @@ pub fn shoot(
         if cd.ready() {
             if let Some((target_entity, target_pos, mut target_shootable, _)) = targets
                 .iter_mut()
+                .filter(|target| {
+                    target.1.translation.x > 20.0 && target.1.translation.x < grid.width()
+                })
                 .map(|target| {
                     (
                         target.0,
