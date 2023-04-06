@@ -1,5 +1,7 @@
 use super::components::Enemy;
-use crate::game::{grid::components::Grid, shooting::components::Shootable, utils::Cooldown};
+use crate::game::{
+    damages::Health, grid::components::Grid, shooting::components::Shootable, utils::Cooldown,
+};
 use bevy::prelude::*;
 use rand::Rng;
 
@@ -41,6 +43,7 @@ fn spawn_enemies(
                 ..default()
             },
             Shootable::default(),
+            Health(3.0),
         ));
         cooldown.start();
     }

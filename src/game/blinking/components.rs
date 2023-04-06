@@ -16,8 +16,8 @@ pub struct Blinking {
 impl Default for Blinking {
     fn default() -> Self {
         Self {
-            blink_timer: Timer::from_seconds(0.12, TimerMode::Repeating),
-            expiration_timer: Timer::from_seconds(0.6, TimerMode::Once),
+            blink_timer: Timer::from_seconds(0.08, TimerMode::Repeating),
+            expiration_timer: Timer::from_seconds(0.4, TimerMode::Once),
             first_visibility: Default::default(),
         }
     }

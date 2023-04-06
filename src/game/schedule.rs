@@ -24,6 +24,11 @@ impl Plugin for SchedulePlugin {
             .configure_set(GameSet::Input.before(GameSet::Logic))
             .configure_set(GameSet::LogicMovement.before(GameSet::LogicCollisions))
             .configure_set(GameSet::LogicCollisions.before(GameSet::LogicAction))
+            .add_system(
+                apply_system_buffers
+                    .after(GameSet::Logic)
+                    .before(GameSet::Depiction),
+            )
             .configure_set(GameSet::Logic.before(GameSet::Depiction));
     }
 }

@@ -34,7 +34,7 @@ fn build_turret(
                     Transform::from_xyz(target.x, target.y, 0.0),
                     Turret {},
                     Collidable {},
-                    Shooter::new(1.0),
+                    Shooter::new(0.7),
                 ));
                 cooldown.start();
             }

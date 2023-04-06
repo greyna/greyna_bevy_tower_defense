@@ -2,6 +2,7 @@ pub mod blinking;
 mod cleanup_systems;
 pub mod collisions;
 pub mod components;
+mod damages;
 mod enemies;
 pub mod grid;
 mod logic_systems;
@@ -18,6 +19,7 @@ use bevy::prelude::*;
 
 use blinking::BlinkingPlugin;
 use collisions::CollisionsPlugin;
+use damages::DamagesPlugin;
 use enemies::EnemiesPlugin;
 use grid::GridPlugin;
 use shooting::ShootingPlugin;
@@ -38,6 +40,7 @@ impl Plugin for GamePlugin {
             .add_plugin(CollisionsPlugin)
             .add_plugin(EnemiesPlugin)
             .add_plugin(ShootingPlugin)
+            .add_plugin(DamagesPlugin)
             .add_systems(
                 (spawn_player, spawn_camera, spawn_target).in_schedule(OnEnter(AppState::Game)),
             )

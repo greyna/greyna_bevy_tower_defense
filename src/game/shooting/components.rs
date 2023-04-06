@@ -4,7 +4,7 @@ use crate::game::utils::Cooldown;
 
 #[derive(Component, Default)]
 pub struct Shootable {
-    pub shot: bool,
+    pub shot: u8,
 }
 
 #[derive(Component)]
