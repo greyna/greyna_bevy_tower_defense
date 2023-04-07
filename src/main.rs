@@ -16,7 +16,7 @@ fn main() {
         .run();
 }
 
-pub fn exit_game(input: Res<Input<KeyCode>>, mut app_exit_sender: EventWriter<AppExit>) {
+fn exit_game(input: Res<Input<KeyCode>>, mut app_exit_sender: EventWriter<AppExit>) {
     if input.just_pressed(KeyCode::Escape) {
         app_exit_sender.send(AppExit);
     }
@@ -29,7 +29,7 @@ pub enum AppState {
     Game,
 }
 
-pub fn toggle_menu(
+fn toggle_menu(
     input: Res<Input<KeyCode>>,
     current_state: Res<State<AppState>>,
     mut next_state: ResMut<NextState<AppState>>,

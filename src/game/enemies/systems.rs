@@ -59,7 +59,7 @@ pub fn spawn_enemies(
         };
 
         for _ in 0..nb_enemies_to_spawn {
-            let random_height = rng.gen_range(200.0..(grid.height() - 40.0));
+            let random_height = rng.gen_range(208.0..(grid.height() - 208.0));
             let random_type = &ENEMIES_TYPES[rng.gen_range(0..3)];
             let random_speed_modifier = rng.gen_range(0.95..1.05);
 
@@ -67,7 +67,7 @@ pub fn spawn_enemies(
                 Enemy {},
                 Movement(random_type.speed * random_speed_modifier),
                 SpriteBundle {
-                    transform: Transform::from_xyz(-64.0, random_height, 0.0),
+                    transform: Transform::from_xyz(-32.0, random_height, 0.0),
                     texture: asset_server.load(random_type.sprite),
                     ..default()
                 },
@@ -95,7 +95,7 @@ pub fn enemies_out(
     mut next_state: ResMut<NextState<AppState>>,
 ) {
     for (enemy_entity, enemy_transform) in enemies.iter() {
-        if enemy_transform.translation.x >= grid.width() {
+        if enemy_transform.translation.x >= (grid.width() + 32.0) {
             commands.entity(enemy_entity).despawn();
 
             lives.0 -= 1;

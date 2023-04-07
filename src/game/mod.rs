@@ -19,7 +19,6 @@ use crate::AppState;
 use bevy::prelude::*;
 
 use blinking::BlinkingPlugin;
-use collisions::CollisionsPlugin;
 use damages::DamagesPlugin;
 use enemies::EnemiesPlugin;
 use gold::GoldPlugin;
@@ -39,7 +38,7 @@ impl Plugin for GamePlugin {
             .add_plugin(GridPlugin)
             .add_plugin(TurretPlugin)
             .add_plugin(BlinkingPlugin)
-            .add_plugin(CollisionsPlugin)
+            //.add_plugin(CollisionsPlugin)
             .add_plugin(EnemiesPlugin)
             .add_plugin(ShootingPlugin)
             .add_plugin(DamagesPlugin)

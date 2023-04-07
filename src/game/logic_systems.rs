@@ -30,7 +30,7 @@ pub fn move_player(
         None => Vec2::new(window.width() / 2.0, window.height() / 2.0),
     };
 
-    let target = grid.snap(target);
+    let target = grid.snap_to_cell_center(target);
 
     for mut player_transform in &mut player_q {
         player_transform.translation.x = target.x;
