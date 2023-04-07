@@ -1,10 +1,8 @@
-use super::{
-    components::Enemy,
-    resources::{EnemiesSpawnerTimings, Lives},
-};
+use super::{components::Enemy, resources::*};
 use crate::{
     game::{
-        damages::Health, grid::components::Grid, shooting::components::Shootable, utils::Cooldown,
+        damages::Health, enemies::components::*, grid::components::Grid,
+        shooting::components::Shootable, utils::Cooldown,
     },
     AppState,
 };
@@ -17,6 +15,22 @@ pub fn set_enemies_resources(mut commands: Commands) {
         spawn_cooldown: Cooldown::new(3.0),
         time_since_start: Stopwatch::new(),
     });
+}
+
+struct EnemyType {
+    sprite: &'static str,
+    speed: f32,
+    health: f32,
+}
+
+impl EnemyType {
+    const fn new(sprite: &'static str, speed: f32, health: f32) -> Self {
+        Self {
+            sprite,
+            speed,
+            health,
+        }
+    }
 }
 
 pub fn spawn_enemies(
@@ -32,10 +46,10 @@ pub fn spawn_enemies(
     if timings.spawn_cooldown.ready() {
         let mut rng = rand::thread_rng();
 
-        static ENEMIES_SPRITES: [&str; 3] = [
-            "sprites/enemy_green.png",
-            "sprites/enemy_grey.png",
-            "sprites/enemy_orange.png",
+        static ENEMIES_TYPES: [EnemyType; 3] = [
+            EnemyType::new("sprites/enemy_green.png", 300.0, 4.0),
+            EnemyType::new("sprites/enemy_grey.png", 100.0, 12.0),
+            EnemyType::new("sprites/enemy_orange.png", 200.0, 6.0),
         ];
 
         const ENEMIES_INCREASE_PER_SECOND: f32 = 0.15;
@@ -46,17 +60,19 @@ pub fn spawn_enemies(
 
         for _ in 0..nb_enemies_to_spawn {
             let random_height = rng.gen_range(200.0..(grid.height() - 40.0));
-            let random_sprite = ENEMIES_SPRITES[rng.gen_range(0..3)];
+            let random_type = &ENEMIES_TYPES[rng.gen_range(0..3)];
+            let random_speed_modifier = rng.gen_range(0.95..1.05);
 
             commands.spawn((
                 Enemy {},
+                Movement(random_type.speed * random_speed_modifier),
                 SpriteBundle {
                     transform: Transform::from_xyz(-64.0, random_height, 0.0),
-                    texture: asset_server.load(random_sprite),
+                    texture: asset_server.load(random_type.sprite),
                     ..default()
                 },
                 Shootable::default(),
-                Health(3.0),
+                Health(random_type.health),
             ));
         }
 
@@ -64,11 +80,10 @@ pub fn spawn_enemies(
     }
 }
 
-pub fn move_enemies(time: Res<Time>, mut enemies: Query<&mut Transform, With<Enemy>>) {
-    for mut enemy_pos in enemies.iter_mut() {
+pub fn move_enemies(time: Res<Time>, mut enemies: Query<(&mut Transform, &Movement), With<Enemy>>) {
+    for (mut enemy_pos, Movement(enemy_speed)) in enemies.iter_mut() {
         let pos = &mut enemy_pos.translation;
-        const ENEMIES_SPEED: f32 = 200.0;
-        pos.x += ENEMIES_SPEED * time.delta_seconds();
+        pos.x += enemy_speed * time.delta_seconds();
     }
 }
 
