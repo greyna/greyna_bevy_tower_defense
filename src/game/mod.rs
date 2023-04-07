@@ -4,6 +4,7 @@ pub mod collisions;
 pub mod components;
 mod damages;
 mod enemies;
+mod gold;
 pub mod grid;
 mod logic_systems;
 pub mod schedule;
@@ -21,6 +22,7 @@ use blinking::BlinkingPlugin;
 use collisions::CollisionsPlugin;
 use damages::DamagesPlugin;
 use enemies::EnemiesPlugin;
+use gold::GoldPlugin;
 use grid::GridPlugin;
 use shooting::ShootingPlugin;
 use turret::TurretPlugin;
@@ -41,6 +43,7 @@ impl Plugin for GamePlugin {
             .add_plugin(EnemiesPlugin)
             .add_plugin(ShootingPlugin)
             .add_plugin(DamagesPlugin)
+            .add_plugin(GoldPlugin)
             .add_systems(
                 (spawn_player, spawn_camera, spawn_target).in_schedule(OnEnter(AppState::Game)),
             )

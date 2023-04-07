@@ -18,7 +18,7 @@ pub struct TurretPlugin;
 
 impl Plugin for TurretPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(build_turret_to_system(0.3).in_set(GameSet::LogicAction))
+        app.add_system(build_turret.in_set(GameSet::LogicAction))
             .add_system(despawn_turrets.in_schedule(OnExit(AppState::Game)))
             .add_system(
                 turret_spawn_audio

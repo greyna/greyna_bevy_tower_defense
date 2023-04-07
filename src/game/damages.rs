@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use super::{schedule::GameSet, shooting::components::Shootable};
+use super::{gold::EnemyKilled, schedule::GameSet, shooting::components::Shootable};
 
 pub struct DamagesPlugin;
 
@@ -22,9 +22,14 @@ pub fn handle_damages(mut damaged: Query<(&mut Health, &Shootable)>) {
     }
 }
 
-pub fn unspawn_dead(mut commands: Commands, healths: Query<(Entity, &Health)>) {
+pub fn unspawn_dead(
+    mut commands: Commands,
+    healths: Query<(Entity, &Health)>,
+    mut enemy_killed_sender: EventWriter<EnemyKilled>,
+) {
     for (entity, health) in healths.iter() {
         if health.0 <= 0.0 {
+            enemy_killed_sender.send(EnemyKilled);
             commands.entity(entity).despawn_recursive();
         }
     }

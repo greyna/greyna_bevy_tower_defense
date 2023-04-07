@@ -1,43 +1,36 @@
 use bevy::prelude::*;
 
 use crate::game::{
-    collisions::components::*, components::*, grid::components::*, shooting::components::*,
-    utils::*,
+    collisions::components::*, components::*, gold::Gold, grid::components::*,
+    shooting::components::*,
 };
 
 use super::components::*;
 
-pub fn build_turret_to_system(
-    cooldown: f32,
-) -> impl FnMut(Commands, Res<Target>, Res<Input<MouseButton>>, Res<Time>, Res<Grid>) {
-    let mut cooldown = Cooldown::new(cooldown);
-    move |commands, target, input, time, grid| {
-        build_turret(commands, &target, &input, &time, &mut cooldown, &grid)
-    }
-}
-
-fn build_turret(
+pub fn build_turret(
     mut commands: Commands,
-    target: &Target,
-    input: &Input<MouseButton>,
-    time: &Time,
-    cooldown: &mut Cooldown,
-    grid: &Grid,
+    target: Res<Target>,
+    input: Res<Input<MouseButton>>,
+    grid: Res<Grid>,
+    mut gold: ResMut<Gold>,
 ) {
-    cooldown.tick(time);
+    const TURRET_GOLD_COST: u32 = 300;
 
-    if cooldown.ready() {
+    if gold.0 >= TURRET_GOLD_COST && input.just_pressed(MouseButton::Left) {
         if let Some(target) = target.pos {
-            if input.just_pressed(MouseButton::Left) {
-                let target = grid.snap(target);
-                commands.spawn((
-                    Transform::from_xyz(target.x, target.y, 0.0),
-                    Turret {},
-                    Collidable {},
-                    Shooter::new(0.7),
-                ));
-                cooldown.start();
-            }
+            gold.0 -= TURRET_GOLD_COST;
+            println!(
+                "Turret cost you {} gold. You have {} gold left.",
+                TURRET_GOLD_COST, gold.0
+            );
+
+            let target = grid.snap(target);
+            commands.spawn((
+                Transform::from_xyz(target.x, target.y, 0.0),
+                Turret {},
+                Collidable {},
+                Shooter::new(0.7),
+            ));
         }
     }
 }

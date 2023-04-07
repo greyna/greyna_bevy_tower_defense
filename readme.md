@@ -2,7 +2,6 @@
 Tower Defense game using Rust programming language and Bevy game engine made by greyna. Bevy Game Jam #3.
 
 # TODO
-- [ ] Menu & UI
 - [x] Terrain
 - [x] Enemies
 - [x] Shooting
@@ -10,11 +9,15 @@ Tower Defense game using Rust programming language and Bevy game engine made by 
 - [x] Lives & Game over
 - [x] Clean enemies & reset lives
 - [x] Increasing difficulty over time
-- [ ] Dollars: resource, turret price & enemy giving on death 
+- [X] Gold: resource, turret price & enemy giving on death
 - [ ] Slot/turret levels & upgrade
 - [ ] Damage types
 - [ ] Authorize turret builds only on first line
 - [ ] Turret side effect: divide slot level and turret damage type levels
-- [ ] Projectiles
 - [ ] Art integration
+- [ ] Menu & UI
 - [ ] Wasm deployment
+- [ ] Itch.io upload
+
+# TODO POLISH
+- [ ] Projectiles
