@@ -23,4 +23,5 @@ Tower Defense game using Rust programming language and Bevy game engine made by 
 # TODO POLISH
 - [ ] Shoot feedback on turret
 - [ ] Projectiles
+- [ ] z-fight enemy bugfix
 

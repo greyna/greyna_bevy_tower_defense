@@ -61,13 +61,17 @@ pub fn spawn_enemies(
         for _ in 0..nb_enemies_to_spawn {
             let random_height = rng.gen_range(208.0..(grid.height() - 208.0));
             let random_type = &ENEMIES_TYPES[rng.gen_range(0..3)];
-            let random_speed_modifier = rng.gen_range(0.95..1.05);
+            let unstack_pos_modifier = rng.gen_range(0.9..1.10);
 
             commands.spawn((
                 Enemy {},
-                Movement(random_type.speed * random_speed_modifier),
+                Movement(random_type.speed * unstack_pos_modifier),
                 SpriteBundle {
-                    transform: Transform::from_xyz(-32.0, random_height, 0.0),
+                    transform: Transform::from_xyz(
+                        -32.0 * unstack_pos_modifier,
+                        random_height,
+                        0.0, // TODO add randomness to fix z-fight
+                    ),
                     texture: asset_server.load(random_type.sprite),
                     ..default()
                 },
