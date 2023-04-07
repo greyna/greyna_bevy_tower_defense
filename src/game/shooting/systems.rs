@@ -1,7 +1,6 @@
 use super::components::*;
 use crate::game::{blinking::components::BlinkRequest, grid::components::Grid};
 use bevy::prelude::*;
-use std::f32::consts::FRAC_PI_2;
 
 pub fn shoot(
     mut commands: Commands,
@@ -39,9 +38,12 @@ pub fn shoot(
                 target_shootable.shot += 1;
                 commands.entity(target_entity).insert(BlinkRequest {});
 
-                let shooter_pos = shooter.0.translation;
-                let angle = (target_pos - shooter_pos).angle_between(shooter_pos);
-                shooter.0.rotation = Quat::from_rotation_z(angle - FRAC_PI_2);
+                let mut shooting_direction = target_pos - shooter.0.translation;
+                shooting_direction.z = 0.0;
+                if shooting_direction != Vec3::ZERO {
+                    let angle = Vec3::Y.angle_between(shooting_direction);
+                    shooter.0.rotation = Quat::from_rotation_z(angle);
+                }
             }
         }
     }
