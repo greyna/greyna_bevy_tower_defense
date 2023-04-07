@@ -8,6 +8,10 @@ use crate::{
 use bevy::prelude::*;
 use rand::Rng;
 
+pub fn set_lives(mut commands: Commands) {
+    commands.insert_resource(Lives(10));
+}
+
 pub fn spawn_enemies_to_system(
     cooldown: f32,
 ) -> impl FnMut(Commands, Res<Time>, Res<AssetServer>, Res<Grid>) {
@@ -74,11 +78,17 @@ pub fn enemies_out(
             lives.0 -= 1;
             println!("Enemy out, life lost! Lives = {}", lives.0);
 
-            if lives.0 <= 0 {
+            if lives.0 == 0 {
                 println!("Game Over !");
                 next_state.set(AppState::Menu);
                 break;
             }
         }
+    }
+}
+
+pub fn clean_enemies(mut commands: Commands, enemies: Query<Entity, With<Enemy>>) {
+    for enemy_entity in enemies.iter() {
+        commands.entity(enemy_entity).despawn_recursive();
     }
 }

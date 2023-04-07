@@ -8,7 +8,7 @@ Tower Defense game using Rust programming language and Bevy game engine made by 
 - [x] Shooting
 - [x] Damages & death
 - [x] Lives & Game over
-- [ ] Clean enemies & reset lives
+- [x] Clean enemies & reset lives
 - [ ] Dollars: resource, turret price & enemy giving on death 
 - [ ] Slot/turret levels & upgrade
 - [ ] Damage types

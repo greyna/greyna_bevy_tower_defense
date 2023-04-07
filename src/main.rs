@@ -6,7 +6,7 @@ use bevy::prelude::*;
 use game::GamePlugin;
 
 fn main() {
-    println!("Game State");
+    println!("Game started");
 
     App::new()
         .add_plugins(DefaultPlugins)
@@ -36,10 +36,10 @@ pub fn toggle_menu(
 ) {
     if input.just_pressed(KeyCode::Space) {
         next_state.set(if current_state.0 == AppState::Menu {
-            println!("Game State");
+            println!("Game started");
             AppState::Game
         } else {
-            println!("Menu State");
+            println!("In menu");
             AppState::Menu
         });
     }
