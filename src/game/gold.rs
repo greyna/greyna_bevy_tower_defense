@@ -17,10 +17,10 @@ pub fn gain_gold(mut enemy_killed_receiver: EventReader<EnemyKilled>, mut gold: 
     for _ in enemy_killed_receiver.iter() {
         gold.0 += GOLD_PER_ENEMY_KILL;
 
-        println!(
-            "Enemy kill got you {} gold. You now have {} gold.",
-            GOLD_PER_ENEMY_KILL, gold.0
-        );
+        // println!(
+        //     "Enemy kill got you {} gold. You now have {} gold.",
+        //     GOLD_PER_ENEMY_KILL, gold.0
+        // );
     }
 }
 

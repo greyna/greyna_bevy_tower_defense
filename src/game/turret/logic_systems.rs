@@ -7,7 +7,7 @@ use crate::game::{
 
 use super::components::*;
 
-const BASE_TURRET_ATTACK_COOLDOWN: f32 = 0.7;
+const BASE_TURRET_ATTACK_COOLDOWN: f32 = 0.4;
 
 pub fn build_turret(
     mut commands: Commands,
@@ -39,14 +39,14 @@ pub fn build_turret(
                                 Transform::from_xyz(target.x, target.y, 0.0),
                                 Turret::default(),
                                 Collidable {},
-                                Shooter::new(BASE_TURRET_ATTACK_COOLDOWN),
+                                Shooter::new(BASE_TURRET_ATTACK_COOLDOWN, BASE_POWER),
                             ))
                             .id();
                         grid.put_turret(target, turret_entity);
                     } else {
                         println!(
-                            "Turret cost is {} gold. You don't have enough.",
-                            TURRET_GOLD_COST
+                            "Turret cost is {} gold. You only have {}.",
+                            TURRET_GOLD_COST, gold.0
                         );
                     }
                 }
@@ -57,6 +57,10 @@ pub fn build_turret(
     }
 }
 
+const BASE_UPGRADE_GOLD_COST: u32 = 400;
+const BASE_POWER: f32 = 20.0;
+const MAX_LEVEL: u32 = 9;
+
 pub fn upgrade_turret(
     mut turrets: Query<(&mut Turret, &mut Shooter)>,
     target: Res<Target>,
@@ -64,34 +68,69 @@ pub fn upgrade_turret(
     grid: ResMut<Grid>,
     mut gold: ResMut<Gold>,
 ) {
-    const UPGRADE_GOLD_COST: u32 = 300;
-
     if let Some(target) = target.pos {
         if input.just_pressed(MouseButton::Left) {
             let target = grid.snap_to_cell_center(target);
 
             let turret_entity = grid.get_turret(target);
             if let Some(turret_entity) = turret_entity {
-                if gold.0 >= UPGRADE_GOLD_COST {
-                    gold.0 -= UPGRADE_GOLD_COST;
-                    let (mut turret, mut shooter) = turrets.get_mut(turret_entity).unwrap();
-                    turret.level += 1;
-                    shooter.set_attack_cooldown(BASE_TURRET_ATTACK_COOLDOWN / turret.level as f32);
+                let (mut turret, mut shooter) = turrets.get_mut(turret_entity).unwrap();
 
-                    println!(
-                        "Upgraded turret from level {} to {} for {} gold. You have {} gold left.",
+                if turret.level < MAX_LEVEL {
+                    let cost = upgrade_gold_cost(turret.level);
+
+                    if gold.0 >= cost {
+                        gold.0 -= cost;
+
+                        turret.level += 1;
+
+                        let old_power = shooter.attack_power;
+                        shooter.attack_power = upgrade_power(turret.level);
+
+                        println!(
+                        "Upgraded turret from level {} to {} (power from {} to {}) for {} gold. You have {} gold left.",
                         turret.level - 1,
                         turret.level,
-                        UPGRADE_GOLD_COST,
+                        old_power,
+                        shooter.attack_power,
+                        cost,
                         gold.0
                     );
+                    } else {
+                        println!("Upgrade cost is {} gold. You only have {}.", cost, gold.0);
+                    }
                 } else {
                     println!(
-                        "Upgrade cost is {} gold. You don't have enough.",
-                        UPGRADE_GOLD_COST
+                        "Turret is already at level {} on max {}.",
+                        turret.level, MAX_LEVEL
                     );
                 }
             }
         }
+    }
+}
+
+fn upgrade_gold_cost(level: u32) -> u32 {
+    match level {
+        0 | 1 => BASE_UPGRADE_GOLD_COST,
+        // cost increase of 50% per level
+        _ => upgrade_gold_cost(level - 1) * 3 / 2,
+    }
+}
+
+fn upgrade_power_per_gold(level: u32) -> f32 {
+    match level {
+        0 | 1 => BASE_POWER / BASE_UPGRADE_GOLD_COST as f32,
+        // power per cost increase of 10% per level
+        _ => upgrade_power_per_gold(level - 1) * 1.1,
+    }
+}
+
+fn upgrade_power(level: u32) -> f32 {
+    match level {
+        0 | 1 => BASE_POWER,
+        _ => (upgrade_power(level - 1)
+            + (upgrade_gold_cost(level) as f32 * upgrade_power_per_gold(level)))
+        .round(),
     }
 }

@@ -10,14 +10,14 @@ pub fn shoot(
     grid: Res<Grid>,
 ) {
     for (_, _, mut target) in targets.iter_mut() {
-        target.shot = 0;
+        target.received_shot_power = 0.0;
     }
 
-    for mut shooter in shooters.iter_mut() {
-        let cd = &mut shooter.1.cooldown;
-        cd.tick(&time);
+    for (mut shooter_transform, mut shooter) in shooters.iter_mut() {
+        let attack_cooldown = &mut shooter.attack_cooldown;
+        attack_cooldown.tick(&time);
 
-        if cd.ready() {
+        if attack_cooldown.ready() {
             if let Some((target_entity, target_pos, mut target_shootable, _)) = targets
                 .iter_mut()
                 .filter(|target| {
@@ -28,21 +28,21 @@ pub fn shoot(
                         target.0,
                         target.1.translation,
                         target.2,
-                        target.1.translation.distance(shooter.0.translation),
+                        target.1.translation.distance(shooter_transform.translation),
                     )
                 })
                 .min_by(|a, b| a.3.total_cmp(&b.3))
             {
-                cd.start();
+                attack_cooldown.start();
 
-                target_shootable.shot += 1;
+                target_shootable.received_shot_power += shooter.attack_power;
                 commands.entity(target_entity).insert(BlinkRequest {});
 
-                let mut shooting_direction = target_pos - shooter.0.translation;
+                let mut shooting_direction = target_pos - shooter_transform.translation;
                 shooting_direction.z = 0.0;
                 if shooting_direction != Vec3::ZERO {
                     let angle = Vec3::Y.angle_between(shooting_direction);
-                    shooter.0.rotation = Quat::from_rotation_z(angle);
+                    shooter_transform.rotation = Quat::from_rotation_z(angle);
                 }
             }
         }

@@ -4,22 +4,20 @@ use crate::game::utils::Cooldown;
 
 #[derive(Component, Default)]
 pub struct Shootable {
-    pub shot: u8,
+    pub received_shot_power: f32,
 }
 
 #[derive(Component)]
 pub struct Shooter {
-    pub cooldown: Cooldown,
+    pub attack_cooldown: Cooldown,
+    pub attack_power: f32,
 }
 
 impl Shooter {
-    pub fn new(attack_cooldown: f32) -> Self {
+    pub fn new(attack_cooldown: f32, attack_power: f32) -> Self {
         Self {
-            cooldown: Cooldown::new(attack_cooldown),
+            attack_cooldown: Cooldown::new(attack_cooldown),
+            attack_power,
         }
-    }
-
-    pub fn set_attack_cooldown(&mut self, attack_cooldown: f32) {
-        self.cooldown.set_duration(attack_cooldown);
     }
 }

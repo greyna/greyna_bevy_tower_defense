@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 #[derive(Component)]
 pub struct Turret {
-    pub level: u8,
+    pub level: u32,
 }
 
 impl Default for Turret {
