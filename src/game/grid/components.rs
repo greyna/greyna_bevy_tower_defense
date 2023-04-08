@@ -8,7 +8,7 @@ pub struct Grid {
     height: f32,
     width: f32,
     cell_size: f32,
-    cells_turret: Vec<Vec<bool>>,
+    cells_turret: Vec<Vec<Option<Entity>>>,
 }
 
 impl Grid {
@@ -18,7 +18,7 @@ impl Grid {
 
         let nb_columns = (width / cell_size) as usize;
         let nb_rows = (height / cell_size) as usize;
-        let cells_turret = vec![vec![false; nb_rows]; nb_columns];
+        let cells_turret = vec![vec![None; nb_rows]; nb_columns];
 
         Self {
             cell_size,
@@ -78,14 +78,14 @@ impl Grid {
         self.cells_turret.len()
     }
 
-    pub fn put_turret(&mut self, turret_pos: Vec2) {
+    pub fn put_turret(&mut self, turret_pos: Vec2, turret_entity: Entity) {
         let turret_pos = self.snap_to_cell_center(turret_pos);
         let row_index = (turret_pos.y / self.cell_size) as usize;
         let column_index = (turret_pos.x / self.cell_size) as usize;
-        self.cells_turret[column_index][row_index] = true;
+        self.cells_turret[column_index][row_index] = Some(turret_entity);
     }
 
-    pub fn get_turret(&self, turret_pos: Vec2) -> bool {
+    pub fn get_turret(&self, turret_pos: Vec2) -> Option<Entity> {
         let turret_pos = self.snap_to_cell_center(turret_pos);
         let row_index = (turret_pos.y / self.cell_size) as usize;
         let column_index = (turret_pos.x / self.cell_size) as usize;

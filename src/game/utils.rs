@@ -24,6 +24,11 @@ impl Cooldown {
     pub fn start(&mut self) {
         self.timer.reset();
     }
+
+    pub fn set_duration(&mut self, duration: f32) {
+        self.timer = Timer::from_seconds(duration, TimerMode::Once);
+        self.timer.tick(Duration::from_secs_f32(duration + 1.0));
+    }
 }
 
 pub fn any_added_component_condition<T: Component>(

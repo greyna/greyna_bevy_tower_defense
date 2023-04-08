@@ -18,4 +18,8 @@ impl Shooter {
             cooldown: Cooldown::new(attack_cooldown),
         }
     }
+
+    pub fn set_attack_cooldown(&mut self, attack_cooldown: f32) {
+        self.cooldown.set_duration(attack_cooldown);
+    }
 }
