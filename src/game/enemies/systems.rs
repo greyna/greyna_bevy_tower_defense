@@ -2,7 +2,7 @@ use super::{components::Enemy, resources::*};
 use crate::{
     game::{
         damages::Health, enemies::components::*, grid::components::Grid,
-        shooting::components::Shootable, utils::Cooldown,
+        shooting::components::Shootable, turret::ColorType, utils::Cooldown,
     },
     AppState,
 };
@@ -21,14 +21,16 @@ struct EnemyType {
     sprite: &'static str,
     speed: f32,
     health: f32,
+    typpe: ColorType,
 }
 
 impl EnemyType {
-    const fn new(sprite: &'static str, speed: f32, health: f32) -> Self {
+    const fn new(sprite: &'static str, speed: f32, health: f32, typpe: ColorType) -> Self {
         Self {
             sprite,
             speed,
             health,
+            typpe,
         }
     }
 }
@@ -47,9 +49,9 @@ pub fn spawn_enemies(
         let mut rng = rand::thread_rng();
 
         static ENEMIES_TYPES: [EnemyType; 3] = [
-            EnemyType::new("sprites/enemy_green.png", 300.0, 4.0),
-            EnemyType::new("sprites/enemy_grey.png", 100.0, 12.0),
-            EnemyType::new("sprites/enemy_orange.png", 200.0, 6.0),
+            EnemyType::new("sprites/enemy_green.png", 300.0, 40.0, ColorType::Green),
+            EnemyType::new("sprites/enemy_grey.png", 100.0, 120.0, ColorType::Grey),
+            EnemyType::new("sprites/enemy_orange.png", 200.0, 60.0, ColorType::Orange),
         ];
 
         const ENEMIES_INCREASE_PER_SECOND: f32 = 0.15;
@@ -75,7 +77,7 @@ pub fn spawn_enemies(
                     texture: asset_server.load(random_type.sprite),
                     ..default()
                 },
-                Shootable::default(),
+                Shootable::new(random_type.typpe),
                 Health(random_type.health),
             ));
         }

@@ -7,19 +7,21 @@ use crate::game::{
 
 use super::components::*;
 
-const BASE_TURRET_ATTACK_COOLDOWN: f32 = 0.4;
-
 pub fn build_turret(
     mut commands: Commands,
     target: Res<Target>,
-    input: Res<Input<MouseButton>>,
+    key_input: Res<Input<KeyCode>>,
     mut grid: ResMut<Grid>,
     mut gold: ResMut<Gold>,
 ) {
     const TURRET_GOLD_COST: u32 = 300;
 
+    let a_key = key_input.just_pressed(KeyCode::A);
+    let z_key = key_input.just_pressed(KeyCode::Z);
+    let e_key = key_input.just_pressed(KeyCode::E);
+
     if let Some(target) = target.pos {
-        if input.just_pressed(MouseButton::Left) {
+        if a_key || z_key || e_key {
             let target = grid.snap_to_cell_center(target);
 
             let zone_allowed_for_turret =
@@ -34,12 +36,32 @@ pub fn build_turret(
                             TURRET_GOLD_COST, gold.0
                         );
 
+                        let mut attack_power_green = 0.0;
+                        let mut attack_power_orange = 0.0;
+                        let mut attack_power_grey = 0.0;
+
+                        let color_type = if a_key {
+                            attack_power_green = BASE_POWER;
+                            ColorType::Green
+                        } else if z_key {
+                            attack_power_orange = BASE_POWER;
+                            ColorType::Orange
+                        } else {
+                            attack_power_grey = BASE_POWER;
+                            ColorType::Grey
+                        };
+
                         let turret_entity = commands
                             .spawn((
                                 Transform::from_xyz(target.x, target.y, 0.0),
-                                Turret::default(),
+                                Turret::new(BASE_POWER, color_type),
                                 Collidable {},
-                                Shooter::new(BASE_TURRET_ATTACK_COOLDOWN, BASE_POWER),
+                                Shooter::new(
+                                    BASE_TURRET_ATTACK_COOLDOWN,
+                                    attack_power_green,
+                                    attack_power_orange,
+                                    attack_power_grey,
+                                ),
                             ))
                             .id();
                         grid.put_turret(target, turret_entity);
@@ -58,6 +80,7 @@ pub fn build_turret(
 }
 
 const BASE_UPGRADE_GOLD_COST: u32 = 400;
+const BASE_TURRET_ATTACK_COOLDOWN: f32 = 0.4;
 const BASE_POWER: f32 = 20.0;
 const MAX_LEVEL: u32 = 9;
 
@@ -84,15 +107,21 @@ pub fn upgrade_turret(
 
                         turret.level += 1;
 
-                        let old_power = shooter.attack_power;
-                        shooter.attack_power = upgrade_power(turret.level);
+                        let old_power = turret.attack_power;
+                        turret.attack_power = upgrade_power(turret.level);
+
+                        match turret.main_type {
+                            ColorType::Green => shooter.attack_power_green = turret.attack_power,
+                            ColorType::Orange => shooter.attack_power_orange = turret.attack_power,
+                            ColorType::Grey => shooter.attack_power_grey = turret.attack_power,
+                        }
 
                         println!(
                         "Upgraded turret from level {} to {} (power from {} to {}) for {} gold. You have {} gold left.",
                         turret.level - 1,
                         turret.level,
                         old_power,
-                        shooter.attack_power,
+                        turret.attack_power,
                         cost,
                         gold.0
                     );

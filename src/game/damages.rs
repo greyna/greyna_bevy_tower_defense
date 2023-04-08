@@ -17,7 +17,7 @@ pub struct Health(pub f32);
 
 pub fn handle_damages(mut damaged: Query<(&mut Health, &Shootable)>) {
     for (mut health, shootable) in damaged.iter_mut() {
-        health.0 -= shootable.received_shot_power / 10.0;
+        health.0 -= shootable.received_shot_power;
     }
 }
 

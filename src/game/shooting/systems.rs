@@ -1,5 +1,5 @@
 use super::components::*;
-use crate::game::{blinking::components::BlinkRequest, grid::components::Grid};
+use crate::game::{blinking::components::BlinkRequest, grid::components::Grid, turret::ColorType};
 use bevy::prelude::*;
 
 pub fn shoot(
@@ -35,7 +35,9 @@ pub fn shoot(
             {
                 attack_cooldown.start();
 
-                target_shootable.received_shot_power += shooter.attack_power;
+                target_shootable.received_shot_power +=
+                    receive_shot_power(&shooter, &target_shootable);
+
                 commands.entity(target_entity).insert(BlinkRequest {});
 
                 let mut shooting_direction = target_pos - shooter_transform.translation;
@@ -47,4 +49,32 @@ pub fn shoot(
             }
         }
     }
+}
+
+fn receive_shot_power(shooter: &Shooter, shootable: &Shootable) -> f32 {
+    const RIGHT_TYPE_MODIFIER: f32 = 2.0;
+    const WRONG_TYPE_MODIFIER: f32 = 0.5;
+
+    let received_green = shooter.attack_power_green
+        * if shootable.typpe == ColorType::Green {
+            RIGHT_TYPE_MODIFIER
+        } else {
+            WRONG_TYPE_MODIFIER
+        };
+
+    let received_orange = shooter.attack_power_orange
+        * if shootable.typpe == ColorType::Orange {
+            RIGHT_TYPE_MODIFIER
+        } else {
+            WRONG_TYPE_MODIFIER
+        };
+
+    let received_grey = shooter.attack_power_grey
+        * if shootable.typpe == ColorType::Grey {
+            RIGHT_TYPE_MODIFIER
+        } else {
+            WRONG_TYPE_MODIFIER
+        };
+
+    received_green + received_orange + received_grey
 }
