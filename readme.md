@@ -1,5 +1,5 @@
-# greyna_bevy_tower_defense aka 'Side Turret Defense'
-Tower Defense game using Rust programming language and Bevy game engine made by greyna. Bevy Game Jam #3 whose theme is "Side Effect".
+# greyna_bevy_tower_defense aka 'Side Turret Defense' for Bevy Game Jam #3
+Tower Defense game using Rust programming language and Bevy game engine made by greyna.
 
 # TODO
 - [x] Terrain
@@ -14,17 +14,19 @@ Tower Defense game using Rust programming language and Bevy game engine made by 
 - [x] Damage types
 - [x] Authorize turret builds only on first line
 - [x] Turret side effect: divide slot level and turret damage type levels
-- [ ] Art integration
-- [ ] Menu & UI
+- [x] Menu & UI
 - [x] Wasm deployment
 - [x] Itch.io upload
 - [x] Balancing !
 - [x] Fixed window size
+- [ ] Score
+- [ ] Jam submission + github open
 
 # TODO POLISH
 - [ ] Shoot feedback on turret
 - [ ] Projectiles
 - [x] z-fight enemy bugfix
+- [ ] New Art integration
 
 # WEB BUILD
 - cargo build --release --target wasm32-unknown-unknown
