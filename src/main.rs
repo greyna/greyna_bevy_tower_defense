@@ -1,8 +1,11 @@
 mod game;
+mod menu;
+mod ui;
 
+use crate::menu::MenuPlugin;
 use bevy::app::AppExit;
 use bevy::prelude::*;
-
+use bevy_egui::EguiPlugin;
 use game::GamePlugin;
 
 fn main() {
@@ -10,8 +13,10 @@ fn main() {
 
     App::new()
         .add_plugins(DefaultPlugins)
+        .add_plugin(EguiPlugin)
         .add_state::<AppState>()
         .add_plugin(GamePlugin)
+        .add_plugin(MenuPlugin)
         .add_systems((toggle_menu, exit_game))
         .run();
 }

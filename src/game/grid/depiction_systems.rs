@@ -13,19 +13,19 @@ pub fn spawn_terrain(mut commands: Commands, asset_server: Res<AssetServer>, gri
             },
             Terrain {},
         );
-        grid.nb_rows() * grid.nb_columns()
+        grid.rows_len() * grid.columns_len()
     ];
 
-    for row in 0..grid.nb_rows() {
-        for column in 0..grid.nb_columns() {
-            let index = column + (row * grid.nb_columns());
+    for row in 0..grid.rows_len() {
+        for column in 0..grid.columns_len() {
+            let index = column + (row * grid.columns_len());
 
             let (SpriteBundle { transform, .. }, ..) = &mut batch[index];
             let Vec2 { x, y } = grid
                 .snap_to_cell_center(Vec2::new(cell_size * column as f32, cell_size * row as f32));
             *transform = Transform::from_xyz(x, y, -100.0);
 
-            if row == 0 || row == (grid.nb_rows() - 1) {
+            if row == 0 || row == (grid.rows_len() - 1) {
                 let (SpriteBundle { texture, .. }, ..) = &mut batch[index];
                 *texture = asset_server.load("sprites/turret_line.png");
             }

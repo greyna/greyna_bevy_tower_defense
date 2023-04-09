@@ -48,13 +48,13 @@ pub fn spawn_enemies(
     if timings.spawn_cooldown.ready() {
         let mut rng = rand::thread_rng();
 
-        static ENEMIES_TYPES: [EnemyType; 3] = [
-            EnemyType::new("sprites/enemy_green.png", 255.0, 140.0, ColorType::Green),
-            EnemyType::new("sprites/enemy_orange.png", 170.0, 280.0, ColorType::Orange),
-            EnemyType::new("sprites/enemy_grey.png", 85.0, 420.0, ColorType::Grey),
+        const ENEMIES_TYPES: [EnemyType; 3] = [
+            EnemyType::new("sprites/enemy_green.png", 255.0, 280.0, ColorType::Green),
+            EnemyType::new("sprites/enemy_orange.png", 170.0, 560.0, ColorType::Orange),
+            EnemyType::new("sprites/enemy_grey.png", 85.0, 840.0, ColorType::Grey),
         ];
 
-        const ENEMIES_INCREASE_PER_SECOND: f32 = 0.15;
+        const ENEMIES_INCREASE_PER_SECOND: f32 = 0.075;
         let nb_enemies_to_spawn: u32 = {
             1 + ((timings.time_since_start.elapsed_secs() * ENEMIES_INCREASE_PER_SECOND).floor()
                 as u32)

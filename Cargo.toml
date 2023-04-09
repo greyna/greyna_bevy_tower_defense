@@ -4,8 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-bevy = { version = "0.10.1"}
-rand = "0.8.5"
+bevy = "0.10"
+rand = "0.8"
+bevy_egui = "0.20"
 
 # Enable a small amount of optimization in debug mode
 [profile.dev]

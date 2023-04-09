@@ -4,7 +4,7 @@ use bevy::prelude::*;
 use systems::*;
 
 mod components;
-mod resources;
+pub mod resources;
 mod systems;
 
 pub struct EnemiesPlugin;

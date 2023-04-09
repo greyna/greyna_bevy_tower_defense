@@ -70,26 +70,39 @@ impl Grid {
         self.snap_coordinate_to_cell_center(self.height - self.cell_size)
     }
 
-    pub fn nb_rows(&self) -> usize {
+    pub fn rows_len(&self) -> usize {
         self.cells_turret.len()
     }
 
-    pub fn nb_columns(&self) -> usize {
+    pub fn columns_len(&self) -> usize {
         self.cells_turret[0].len()
     }
 
     pub fn put_turret(&mut self, turret_pos: Vec2, turret_entity: Entity) {
         let turret_pos = self.snap_to_cell_center(turret_pos);
+
         let row_index = (turret_pos.y / self.cell_size) as usize;
         let column_index = (turret_pos.x / self.cell_size) as usize;
-        self.cells_turret[row_index][column_index] = Some(turret_entity);
+
+        if row_index < self.rows_len() && column_index < self.columns_len() {
+            self.cells_turret[row_index][column_index] = Some(turret_entity);
+        } else {
+            println!("Error shouldn't be able to put turret here!");
+        }
     }
 
     pub fn get_turret(&self, turret_pos: Vec2) -> Option<Entity> {
         let turret_pos = self.snap_to_cell_center(turret_pos);
+
         let row_index = (turret_pos.y / self.cell_size) as usize;
         let column_index = (turret_pos.x / self.cell_size) as usize;
-        self.cells_turret[row_index][column_index]
+
+        if row_index < self.rows_len() && column_index < self.columns_len() {
+            self.cells_turret[row_index][column_index]
+        } else {
+            println!("Error shouldn't be able to read turret here!");
+            None
+        }
     }
 
     pub fn get_side_turrets(&self, turret_entity: Entity) -> (Option<Entity>, Option<Entity>) {

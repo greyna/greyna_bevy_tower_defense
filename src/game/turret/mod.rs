@@ -22,6 +22,7 @@ impl Plugin for TurretPlugin {
             (build_turret, upgrade_turret.before(build_turret)).in_set(GameSet::LogicAction),
         )
         .add_system(despawn_turrets.in_schedule(OnExit(AppState::Game)))
+        .add_system(ui.in_set(GameSet::Depiction))
         .add_system(
             turret_spawn_audio
                 .run_if(any_added_component_condition::<Turret>())
