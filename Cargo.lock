@@ -1659,7 +1659,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "greyna-bevy-tower-defense"
+name = "greyna_bevy_tower_defense"
 version = "0.1.0"
 dependencies = [
  "bevy",

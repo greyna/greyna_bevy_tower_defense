@@ -16,8 +16,8 @@ Tower Defense game using Rust programming language and Bevy game engine made by 
 - [ ] Turret side effect: divide slot level and turret damage type levels
 - [ ] Art integration
 - [ ] Menu & UI
-- [ ] Wasm deployment
-- [ ] Itch.io upload
+- [x] Wasm deployment
+- [x] Itch.io upload
 - [ ] Balancing !
 - [ ] Fixed window size
 
@@ -26,3 +26,9 @@ Tower Defense game using Rust programming language and Bevy game engine made by 
 - [ ] Projectiles
 - [ ] z-fight enemy bugfix
 
+# WEB BUILD
+- cargo build --release --target wasm32-unknown-unknown
+- wasm-bindgen --out-dir ./out/ --target web ./target/wasm32-unknown-unknown/release/greyna_bevy_tower_defense.wasm
+- copy assets/ folder into ./out/
+- copy index.html and restart-audio-context.js from tools/ to ./out/
+- zip out/ folder and upload it on itch.io
