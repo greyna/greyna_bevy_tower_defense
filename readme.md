@@ -23,12 +23,13 @@ Tower Defense game using Rust programming language and Bevy game engine made by 
 - [ ] Jam submission + github open
 
 # TODO POLISH
+- [ ] Bugfix turret orientation
 - [ ] Shoot feedback on turret
-- [ ] Projectiles
 - [x] z-fight enemy bugfix
 - [ ] New Art integration
+- [ ] Projectiles
 
-# WEB BUILD
+# MY WEB BUILD TUTORIAL
 - cargo build --release --target wasm32-unknown-unknown
 - wasm-bindgen --out-dir ./out/ --target web ./target/wasm32-unknown-unknown/release/greyna_bevy_tower_defense.wasm
 - copy assets/ folder into ./out/

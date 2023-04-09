@@ -12,16 +12,12 @@ impl Plugin for MenuPlugin {
 }
 
 fn display_menu(mut contexts: EguiContexts, main_window: Query<&Window, With<PrimaryWindow>>) {
-    my_window(
-        "Side Tower Defense for Bevy Game Jam #3",
-        Vec2::default(),
-        &main_window,
-    )
-    .title_bar(true)
-    .anchor(Align2::CENTER_TOP, [0.0, 100.0])
-    .show(contexts.ctx_mut(), |ui| {
-        ui.label("Made by greyna for Bevy Game Jam #3");
-    });
+    my_window("Side Tower Defense", Vec2::default(), &main_window)
+        .title_bar(true)
+        .anchor(Align2::CENTER_TOP, [0.0, 100.0])
+        .show(contexts.ctx_mut(), |ui| {
+            ui.label("Made by greyna for Bevy Game Jam #3");
+        });
 
     my_window("Menu", Vec2::default(), &main_window)
         .anchor(Align2::CENTER_CENTER, [0.0, 0.0])
