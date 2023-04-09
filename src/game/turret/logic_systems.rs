@@ -16,12 +16,12 @@ pub fn build_turret(
 ) {
     const TURRET_GOLD_COST: u32 = 300;
 
-    let a_key = key_input.just_pressed(KeyCode::A);
-    let z_key = key_input.just_pressed(KeyCode::Z);
     let e_key = key_input.just_pressed(KeyCode::E);
+    let r_key = key_input.just_pressed(KeyCode::R);
+    let t_key = key_input.just_pressed(KeyCode::T);
 
     if let Some(target) = target.pos {
-        if a_key || z_key || e_key {
+        if e_key || r_key || t_key {
             let target = grid.snap_to_cell_center(target);
 
             let zone_allowed_for_turret =
@@ -40,10 +40,10 @@ pub fn build_turret(
                         let mut attack_power_orange = 0.0;
                         let mut attack_power_grey = 0.0;
 
-                        let color_type = if a_key {
+                        let color_type = if e_key {
                             attack_power_green = BASE_POWER;
                             ColorType::Green
-                        } else if z_key {
+                        } else if r_key {
                             attack_power_orange = BASE_POWER;
                             ColorType::Orange
                         } else {
@@ -71,6 +71,8 @@ pub fn build_turret(
                             TURRET_GOLD_COST, gold.0
                         );
                     }
+                } else {
+                    println!("Turret already built here.");
                 }
             } else {
                 println!("Zone disallowed for building.");
@@ -134,6 +136,8 @@ pub fn upgrade_turret(
                         turret.level, MAX_LEVEL
                     );
                 }
+            } else {
+                println!("No turret to upgrade here.");
             }
         }
     }

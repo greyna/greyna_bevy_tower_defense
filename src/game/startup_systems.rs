@@ -3,7 +3,7 @@ use super::components::*;
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 
-pub fn spawn_player(
+pub fn _spawn_player(
     mut commands: Commands,
     window_query: Query<&Window, With<PrimaryWindow>>,
     asset_server: Res<AssetServer>,

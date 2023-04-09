@@ -1,5 +1,5 @@
 use super::components::*;
-use crate::game::{blinking::components::BlinkRequest, grid::components::Grid, turret::ColorType};
+use crate::game::{blinking::components::BlinkRequest, grid::components::Grid, turret::*};
 use bevy::prelude::*;
 
 pub fn shoot(
@@ -77,4 +77,37 @@ fn receive_shot_power(shooter: &Shooter, shootable: &Shootable) -> f32 {
         };
 
     received_green + received_orange + received_grey
+}
+
+// Bevy Jam #3 -> SIDE EFFECT APPLICATION :)
+pub fn update_attack_power(
+    mut shooters: Query<(Entity, &mut Shooter)>,
+    turrets: Query<&Turret>,
+    grid: Res<Grid>,
+) {
+    for (_, mut shooter) in shooters.iter_mut() {
+        shooter.attack_power_green = 0.0;
+        shooter.attack_power_orange = 0.0;
+        shooter.attack_power_grey = 0.0;
+    }
+
+    for (entity, mut shooter) in shooters.iter_mut() {
+        let turret = turrets.get(entity).unwrap();
+        let typpe = turret.main_type;
+        let power = turret.attack_power;
+
+        shooter.add_attack_power(power, typpe);
+
+        let (left_turret, right_turret) = grid.get_side_turrets(entity);
+
+        if let Some(left_turret) = left_turret {
+            let left_turret = turrets.get(left_turret).unwrap();
+            shooter.add_attack_power(left_turret.attack_power, left_turret.main_type);
+        }
+
+        if let Some(right_turret) = right_turret {
+            let right_turret = turrets.get(right_turret).unwrap();
+            shooter.add_attack_power(right_turret.attack_power, right_turret.main_type);
+        }
+    }
 }

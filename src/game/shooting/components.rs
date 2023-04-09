@@ -39,4 +39,12 @@ impl Shooter {
             attack_power_grey,
         }
     }
+
+    pub fn add_attack_power(&mut self, power: f32, typpe: ColorType) {
+        match typpe {
+            ColorType::Green => self.attack_power_green += power,
+            ColorType::Orange => self.attack_power_orange += power,
+            ColorType::Grey => self.attack_power_grey += power,
+        }
+    }
 }

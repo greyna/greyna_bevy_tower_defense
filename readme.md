@@ -13,18 +13,18 @@ Tower Defense game using Rust programming language and Bevy game engine made by 
 - [x] Slot/turret levels & upgrade
 - [x] Damage types
 - [x] Authorize turret builds only on first line
-- [ ] Turret side effect: divide slot level and turret damage type levels
+- [x] Turret side effect: divide slot level and turret damage type levels
 - [ ] Art integration
 - [ ] Menu & UI
 - [x] Wasm deployment
 - [x] Itch.io upload
-- [ ] Balancing !
-- [ ] Fixed window size
+- [x] Balancing !
+- [x] Fixed window size
 
 # TODO POLISH
 - [ ] Shoot feedback on turret
 - [ ] Projectiles
-- [ ] z-fight enemy bugfix
+- [x] z-fight enemy bugfix
 
 # WEB BUILD
 - cargo build --release --target wasm32-unknown-unknown

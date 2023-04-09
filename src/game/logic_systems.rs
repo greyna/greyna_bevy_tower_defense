@@ -17,7 +17,7 @@ pub fn target_cursor(
         .map(|ray| ray.origin.truncate());
 }
 
-pub fn move_player(
+pub fn _move_player(
     window_q: Query<&Window, With<PrimaryWindow>>,
     mut player_q: Query<&mut Transform, With<Player>>,
     target: Res<Target>,

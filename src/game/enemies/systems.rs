@@ -10,7 +10,7 @@ use bevy::{prelude::*, time::Stopwatch};
 use rand::Rng;
 
 pub fn set_enemies_resources(mut commands: Commands) {
-    commands.insert_resource(Lives(10));
+    commands.insert_resource(Lives(20));
     commands.insert_resource(EnemiesSpawnerTimings {
         spawn_cooldown: Cooldown::new(3.0),
         time_since_start: Stopwatch::new(),
@@ -49,9 +49,9 @@ pub fn spawn_enemies(
         let mut rng = rand::thread_rng();
 
         static ENEMIES_TYPES: [EnemyType; 3] = [
-            EnemyType::new("sprites/enemy_green.png", 300.0, 40.0, ColorType::Green),
-            EnemyType::new("sprites/enemy_grey.png", 100.0, 120.0, ColorType::Grey),
-            EnemyType::new("sprites/enemy_orange.png", 200.0, 60.0, ColorType::Orange),
+            EnemyType::new("sprites/enemy_green.png", 255.0, 140.0, ColorType::Green),
+            EnemyType::new("sprites/enemy_orange.png", 170.0, 280.0, ColorType::Orange),
+            EnemyType::new("sprites/enemy_grey.png", 85.0, 420.0, ColorType::Grey),
         ];
 
         const ENEMIES_INCREASE_PER_SECOND: f32 = 0.15;
@@ -63,16 +63,17 @@ pub fn spawn_enemies(
         for _ in 0..nb_enemies_to_spawn {
             let random_height = rng.gen_range(208.0..(grid.height() - 208.0));
             let random_type = &ENEMIES_TYPES[rng.gen_range(0..3)];
-            let unstack_pos_modifier = rng.gen_range(0.9..1.10);
+            let unstack_pos_modifier = rng.gen_range(0.8..1.20);
+            let random_z = rng.gen_range(-0.99..-0.01);
 
             commands.spawn((
                 Enemy {},
                 Movement(random_type.speed * unstack_pos_modifier),
                 SpriteBundle {
                     transform: Transform::from_xyz(
-                        -32.0 * unstack_pos_modifier,
+                        -32.0 * (2.0 - unstack_pos_modifier),
                         random_height,
-                        0.0, // TODO add randomness to fix z-fight
+                        random_z,
                     ),
                     texture: asset_server.load(random_type.sprite),
                     ..default()

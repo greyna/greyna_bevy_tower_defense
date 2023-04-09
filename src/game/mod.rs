@@ -44,13 +44,14 @@ impl Plugin for GamePlugin {
             .add_plugin(DamagesPlugin)
             .add_plugin(GoldPlugin)
             .add_systems(
-                (spawn_player, spawn_camera, spawn_target).in_schedule(OnEnter(AppState::Game)),
+                (/*spawn_player, */ spawn_camera, spawn_target)
+                    .in_schedule(OnEnter(AppState::Game)),
             )
             .add_systems(
                 (despawn_player, despawn_camera, despawn_target)
                     .in_schedule(OnExit(AppState::Game)),
             )
-            .add_system(target_cursor.in_set(GameSet::Input))
-            .add_system(move_player.in_set(GameSet::LogicMovement));
+            .add_system(target_cursor.in_set(GameSet::Input));
+        //.add_system(move_player.in_set(GameSet::LogicMovement));
     }
 }

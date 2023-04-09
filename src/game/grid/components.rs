@@ -18,7 +18,7 @@ impl Grid {
 
         let nb_columns = (width / cell_size) as usize;
         let nb_rows = (height / cell_size) as usize;
-        let cells_turret = vec![vec![None; nb_rows]; nb_columns];
+        let cells_turret = vec![vec![None; nb_columns]; nb_rows];
 
         Self {
             cell_size,
@@ -71,24 +71,49 @@ impl Grid {
     }
 
     pub fn nb_rows(&self) -> usize {
-        self.cells_turret[0].len()
+        self.cells_turret.len()
     }
 
     pub fn nb_columns(&self) -> usize {
-        self.cells_turret.len()
+        self.cells_turret[0].len()
     }
 
     pub fn put_turret(&mut self, turret_pos: Vec2, turret_entity: Entity) {
         let turret_pos = self.snap_to_cell_center(turret_pos);
         let row_index = (turret_pos.y / self.cell_size) as usize;
         let column_index = (turret_pos.x / self.cell_size) as usize;
-        self.cells_turret[column_index][row_index] = Some(turret_entity);
+        self.cells_turret[row_index][column_index] = Some(turret_entity);
     }
 
     pub fn get_turret(&self, turret_pos: Vec2) -> Option<Entity> {
         let turret_pos = self.snap_to_cell_center(turret_pos);
         let row_index = (turret_pos.y / self.cell_size) as usize;
         let column_index = (turret_pos.x / self.cell_size) as usize;
-        self.cells_turret[column_index][row_index]
+        self.cells_turret[row_index][column_index]
+    }
+
+    pub fn get_side_turrets(&self, turret_entity: Entity) -> (Option<Entity>, Option<Entity>) {
+        let mut left_turret = None;
+        let mut right_turret = None;
+
+        for row in self.cells_turret.iter() {
+            for (turret1, turret2) in row
+                .iter()
+                .zip(row.iter().skip(1))
+                .filter(|(x, y)| x.is_some() && y.is_some())
+            {
+                if turret1.unwrap() == turret_entity {
+                    right_turret = *turret2;
+                } else if turret2.unwrap() == turret_entity {
+                    left_turret = *turret1;
+                }
+            }
+
+            if left_turret.is_some() || right_turret.is_some() {
+                break;
+            }
+        }
+
+        (left_turret, right_turret)
     }
 }
