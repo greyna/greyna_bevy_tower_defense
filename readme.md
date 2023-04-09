@@ -1,5 +1,5 @@
-# greyna-bevy-tower-defense
-Tower Defense game using Rust programming language and Bevy game engine made by greyna. Bevy Game Jam #3.
+# greyna_bevy_tower_defense aka 'Side Turret Defense'
+Tower Defense game using Rust programming language and Bevy game engine made by greyna. Bevy Game Jam #3 whose theme is "Side Effect".
 
 # TODO
 - [x] Terrain
