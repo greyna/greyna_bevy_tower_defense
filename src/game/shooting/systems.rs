@@ -101,13 +101,15 @@ pub fn update_attack_power(
         let (left_turret, right_turret) = grid.get_side_turrets(entity);
 
         if let Some(left_turret) = left_turret {
-            let left_turret = turrets.get(left_turret).unwrap();
-            shooter.add_attack_power(left_turret.attack_power, left_turret.main_type);
+            if let Ok(left_turret) = turrets.get(left_turret) {
+                shooter.add_attack_power(left_turret.attack_power, left_turret.main_type);
+            }
         }
 
         if let Some(right_turret) = right_turret {
-            let right_turret = turrets.get(right_turret).unwrap();
-            shooter.add_attack_power(right_turret.attack_power, right_turret.main_type);
+            if let Ok(right_turret) = turrets.get(right_turret) {
+                shooter.add_attack_power(right_turret.attack_power, right_turret.main_type);
+            }
         }
     }
 }

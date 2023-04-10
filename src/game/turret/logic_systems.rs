@@ -216,13 +216,9 @@ pub fn ui(
 
     if let Some(target) = target.pos {
         let target = grid.snap_to_cell_center(target);
-        if let Some((_, turret, shooter)) = turrets
-            .iter()
-            .filter(|(transform, ..)| {
-                target == Vec2::new(transform.translation.x, transform.translation.y)
-            })
-            .next()
-        {
+        if let Some((_, turret, shooter)) = turrets.iter().find(|(transform, ..)| {
+            target == Vec2::new(transform.translation.x, transform.translation.y)
+        }) {
             my_window("Turret tooltip", target, &main_window).show(contexts.ctx_mut(), |ui| {
                 ui.heading(format!("LEVEL {}", turret.level));
                 ui.label(format!("Upgrade: {}g", upgrade_gold_cost(turret.level)));
