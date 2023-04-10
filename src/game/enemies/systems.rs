@@ -1,7 +1,7 @@
 use super::{components::Enemy, resources::*};
 use crate::{
     game::{
-        damages::Health, enemies::components::*, grid::components::Grid,
+        damages::Health, enemies::components::*, gold::Score, grid::components::Grid,
         shooting::components::Shootable, turret::ColorType, utils::Cooldown,
     },
     AppState,
@@ -98,14 +98,17 @@ pub fn enemies_out(
     mut commands: Commands,
     enemies: Query<(Entity, &Transform), With<Enemy>>,
     mut lives: ResMut<Lives>,
+    mut score: ResMut<Score>,
     grid: Res<Grid>,
     mut next_state: ResMut<NextState<AppState>>,
 ) {
+    const SCORE_LOST_PER_ENEMY_OUT: i32 = 200;
     for (enemy_entity, enemy_transform) in enemies.iter() {
         if enemy_transform.translation.x >= (grid.width() + 32.0) {
             commands.entity(enemy_entity).despawn();
 
             lives.0 -= 1;
+            score.score -= SCORE_LOST_PER_ENEMY_OUT;
             println!("Enemy out, life lost! Lives = {}", lives.0);
 
             if lives.0 == 0 {

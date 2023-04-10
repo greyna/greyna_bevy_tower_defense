@@ -189,20 +189,20 @@ pub fn ui(
     mut contexts: EguiContexts,
     main_window: Query<&Window, With<PrimaryWindow>>,
 ) {
-    my_window(
-        &format!("Build Turrets ({} gold)", TURRET_GOLD_COST),
-        Vec2::default(),
-        &main_window,
-    )
-    .title_bar(true)
-    .anchor(Align2::RIGHT_TOP, [-10.0, 10.0])
-    .collapsible(true)
-    .show(contexts.ctx_mut(), |ui| {
-        ui.label("Hover your mouse over top/bottom row then:");
-        ui.label(" - Press 'e' for a green one, strong against green enemies");
-        ui.label(" - Press 'r' for an orange one, strong against orange enemies");
-        ui.label(" - Press 't' for a grey one, strong against grey enemies");
-    });
+    my_window("Turrets", Vec2::default(), &main_window)
+        .title_bar(true)
+        .anchor(Align2::RIGHT_TOP, [-10.0, 10.0])
+        .collapsible(true)
+        .show(contexts.ctx_mut(), |ui| {
+            ui.label(format!(
+                "To build a turret for {} gold, have focus in the game window (click it) then hover your mouse over the top or bottom row and press one of the 3 following keyboard keys:",
+                TURRET_GOLD_COST
+            ));
+            ui.label(" - 'E' for a green one, strong against green enemies");
+            ui.label(" - 'R' for an orange one, strong against orange enemies");
+            ui.label(" - 'T' for a grey one, strong against grey enemies");
+            ui.label("Click a turret to upgrade it.");
+        });
 
     my_window("Side Effect", Vec2::default(), &main_window)
         .anchor(Align2::LEFT_TOP, [10.0, 10.0])

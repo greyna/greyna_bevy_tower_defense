@@ -1,5 +1,8 @@
-# greyna_bevy_tower_defense aka 'Side Turret Defense' for Bevy Game Jam #3
+# greyna_bevy_tower_defense aka 'Side Tower Defense' for Bevy Game Jam #3
 Tower Defense game using Rust programming language and Bevy game engine made by greyna.
+
+# License
+The game as well as all assets and code are free and licensed under "Licence Creative Commons Attribution 4.0 International".
 
 # TODO
 - [x] Terrain
@@ -19,13 +22,18 @@ Tower Defense game using Rust programming language and Bevy game engine made by 
 - [x] Itch.io upload
 - [x] Balancing !
 - [x] Fixed window size
-- [ ] Score
-- [ ] Jam submission + github open
+- [x] Score
+- [x] Jam submission + github license
 
 # TODO POLISH
-- [ ] Bugfix turret orientation
+- [ ] Buttons and UI for building and upgrading turrets
+- [ ] Bugfix turret orientation/targetting
 - [ ] Shoot feedback on turret
 - [x] z-fight enemy bugfix
+- [ ] turret slot shouldn't orientates
+- [ ] improve turret targeting
+- [ ] non-linear difficulty progression
+- [ ] waves of enemies
 - [ ] New Art integration
 - [ ] Projectiles
 

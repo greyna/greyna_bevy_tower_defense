@@ -4,7 +4,7 @@ pub mod collisions;
 pub mod components;
 mod damages;
 mod enemies;
-mod gold;
+pub mod gold;
 pub mod grid;
 mod logic_systems;
 pub mod schedule;
