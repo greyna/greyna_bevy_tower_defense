@@ -1,0 +1,45 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'greyna_bevy_tower_defense'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=greyna_bevy_tower_defense",
+                    "--package=greyna_bevy_tower_defense"
+                ],
+                "filter": {
+                    "name": "greyna_bevy_tower_defense",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'greyna_bevy_tower_defense'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=greyna_bevy_tower_defense",
+                    "--package=greyna_bevy_tower_defense"
+                ],
+                "filter": {
+                    "name": "greyna_bevy_tower_defense",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
