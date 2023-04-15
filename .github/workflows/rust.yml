@@ -30,7 +30,9 @@ jobs:
             ~/.cargo/git/db/
             target/
           key: ${{ runner.os }}-cargo-build-stable-${{ hashFiles('**/Cargo.toml') }}
-      - uses: dtolnay/rust-toolchain@${{ env.TOOLCHAIN }}
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ env.TOOLCHAIN }}
       - name: Install alsa and udev
         run: sudo apt-get update; sudo apt-get install --no-install-recommends libasound2-dev libudev-dev
         if: runner.os == 'linux'
